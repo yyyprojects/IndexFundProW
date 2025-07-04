@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Interactive Guide to Index Funds</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: The SPA is designed around a user's learning journey, not the report's linear chapters. It starts with a high-level hook ("What is it?") and then breaks into four thematic, interactive sections: 1. "The Big Idea" visualizes the core benefits (cost, diversification) for immediate impact. 2. "How It Works" uses interactive tabs to compare the key building blocks (Indexes, Fund Types). 3. "The Trade-Offs" presents risks in a balanced, non-alarming way. 4. "How to Start" provides a simple, actionable checklist. This structure prioritizes understanding and engagement over rote memorization, allowing users to explore concepts in a non-linear, digestible format. Navigation is handled by a sticky header, making it easy to jump between these core concepts. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: The staggering difference in returns due to fees ($88,482). Goal: Demonstrate the power of low costs. Viz/Method: Interactive Line Chart (Chart.js) comparing two funds over 30 years. Interaction: The chart is animated on load, visually showing the growing gap. Justification: A static number is forgettable; a visual representation of lost wealth is impactful and a core "wow" factor.
+        - Report Info: S&P 500 vs. DJIA vs. NASDAQ. Goal: Compare the major market indexes. Viz/Method: An interactive card-based layout. Interaction: Clicking a tab for an index reveals its detailed information in a clean, focused view. Justification: Replaces a static table with an engaging, user-directed comparison tool that reduces cognitive load.
+        - Report Info: Mutual Funds vs. ETFs. Goal: Compare the two fund structures. Viz/Method: A two-column interactive comparison. Interaction: Buttons allow toggling between the two, with key differences highlighted. Justification: Makes the comparison direct and easy to digest side-by-side.
+        - Report Info: The concept of diversification. Goal: Show, not just tell, the benefit of spreading risk. Viz/Method: A simple visual diagram made with HTML/Tailwind. A single large block represents a risky single-stock investment, contrasted with a grid of 500 small blocks for an index fund. Justification: This abstract concept becomes concrete and instantly understandable without complex charts.
+        - Report Info: The steps to start investing. Goal: Make the process feel achievable. Viz/Method: A styled, step-by-step checklist diagram using HTML/Tailwind. Justification: Turns a text list into a clear, visual roadmap, reducing intimidation.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #3D405B;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-button.active, .nav-button:hover {
+            background-color: #81B29A;
+            color: #FDFDFD;
+        }
+        .content-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .content-section.active {
+            display: block;
+            opacity: 1;
+        }
+        .interactive-tab {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .interactive-tab.active {
+            background-color: #E07A5F;
+            color: #FDFDFD;
+            border-color: #E07A5F;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="sticky top-0 z-50 bg-[#F8F7F4]/80 backdrop-blur-md shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl md:text-2xl font-bold text-[#3D405B]">Index Funds, Simplified.</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <button class="nav-button px-3 py-2 rounded-md text-sm font-semibold" data-section="section-intro">The Big Idea</button>
+                        <button class="nav-button px-3 py-2 rounded-md text-sm font-semibold" data-section="section-how">How It Works</button>
+                        <button class="nav-button px-3 py-2 rounded-md text-sm font-semibold" data-section="section-risks">The Trade-Offs</button>
+                        <button class="nav-button px-3 py-2 rounded-md text-sm font-semibold" data-section="section-start">How to Start</button>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <select id="mobile-nav" class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#81B29A] focus:border-[#81B29A] block w-full p-2.5">
+                        <option value="section-intro">The Big Idea</option>
+                        <option value="section-how">How It Works</option>
+                        <option value="section-risks">The Trade-Offs</option>
+                        <option value="section-start">How to Start</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <section id="section-intro" class="content-section">
+            <!-- Content for The Big Idea -->
+        </section>
+
+        <section id="section-how" class="content-section">
+            <!-- Content for How It Works -->
+        </section>
+
+        <section id="section-risks" class="content-section">
+            <!-- Content for The Trade-Offs -->
+        </section>
+
+        <section id="section-start" class="content-section">
+            <!-- Content for How to Start -->
+        </section>
+    </main>
+
+    <footer class="bg-gray-100 mt-12">
+        <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+            <p>This interactive guide is based on the report "The Definitive Guide to Index Funds".</p>
+            <p>&copy; 2025 An Interactive Explainer. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const appData = {
+            intro: {
+                title: 'The Big Idea: Why Choose Index Funds?',
+                intro_text: 'The popularity of index funds isn\'t accidental. It\'s based on a few simple, yet powerful, advantages that help investors build wealth over the long term. This section visualizes the two most important concepts: the power of low costs and the safety of diversification.',
+                cost: {
+                    title: 'The Power of Low Costs',
+                    description: 'Fees might seem small, but over decades they can consume a shocking amount of your returns. This chart shows how a $50,000 investment grows over 30 years, earning 7% annually. The only difference is the fee: a typical 1.2% for an active fund versus a lean 0.2% for an index fund. The difference in the end result is the "cost of complexity". Interact with the chart to see the exact values.',
+                    chartData: {
+                        initial: 50000,
+                        years: 30,
+                        returnRate: 0.07,
+                        activeFee: 0.012,
+                        passiveFee: 0.002
+                    }
+                },
+                diversification: {
+                    title: 'Instant Diversification',
+                    description: 'Putting all your money in one company is a huge risk. If that company fails, your investment is gone. A broad index fund, like one tracking the S&P 500, spreads your investment across hundreds of companies in many different industries. This visualization shows the concept: one single, high-risk bet versus hundreds of smaller, safer ones.',
+                }
+            },
+            how: {
+                title: 'How Do They Actually Work?',
+                intro_text: 'To understand an index fund, you first need to grasp its building blocks. This section breaks down the core concepts: what an index is, the different types you\'ll encounter, and the two main ways index funds are packaged (Mutual Funds vs. ETFs). Use the tabs to explore each concept.',
+                tabs: [
+                    { 
+                        id: 'basics', 
+                        name: 'The Building Blocks', 
+                        title: 'From a Single Stock to the Whole Market',
+                        steps: [
+                            { name: 'Stock', detail: 'A stock is a small piece of ownership in a single company. Buying a stock is a bet on that one company\'s success.'},
+                            { name: 'Stock Market', detail: 'A huge marketplace (like the NYSE or NASDAQ) where stocks are bought and sold, determining company values.'},
+                            { name: 'Market Index', detail: 'A list that tracks a representative group of stocks (e.g., the S&P 500). You can\'t invest in an index directly—it\'s just a benchmark.'},
+                            { name: 'Index Fund', detail: 'The solution! A fund that buys all the stocks on an index, letting you invest in the entire benchmark with one purchase.'}
+                        ]
+                    },
+                    { 
+                        id: 'indexes', 
+                        name: 'Major Indexes', 
+                        title: 'Comparing the Market\'s Barometers',
+                        items: [
+                             { name: 'S&P 500', companies: '~500', represents: 'The broad U.S. large-cap market. The best proxy for the overall U.S. economy.', weighting: 'Market-Cap Weighted', takeaway: 'Provides a diversified snapshot of the U.S. economy\'s largest players. Performance is driven by the biggest companies.' },
+                             { name: 'Dow Jones (DJIA)', companies: '30', represents: '30 large, established "blue-chip" industry leaders.', weighting: 'Price-Weighted', takeaway: 'A historical, widely-quoted but narrow view. Performance can be skewed by high-priced stocks.' },
+                             { name: 'NASDAQ Composite', companies: '2,500+', represents: 'The technology and innovation sector; includes most stocks on the NASDAQ exchange.', weighting: 'Market-Cap Weighted', takeaway: 'A growth-oriented but tech-heavy and potentially more volatile view of the market.' },
+                        ]
+                    },
+                    { 
+                        id: 'types', 
+                        name: 'Fund Types',
+                        title: 'Two Flavors: Mutual Fund vs. ETF',
+                        items: [
+                            { name: 'Index Mutual Fund', buySell: 'Directly from the fund company.', pricing: 'Once per day at market close (NAV).', bestFor: 'Automated, "set it and forget it" investing. Ideal for dollar-cost averaging.', icon: '📅'},
+                            { name: 'Index ETF', buySell: 'On a stock exchange, like a stock.', pricing: 'Continuously throughout the day.', bestFor: 'Investors wanting trading flexibility, lowest costs, and tax efficiency.', icon: '⏱️'}
+                        ]
+                    }
+                ]
+            },
+            risks: {
+                title: 'A Balanced View: The Trade-Offs',
+                intro_text: 'No investment is perfect. Index funds come with their own set of risks and limitations. Understanding these trade-offs is crucial for making an informed decision. Here are the key points to be aware of.',
+                items: [
+                    { title: 'Average Returns Only', description: 'By design, you cannot beat the market, only match its average performance. You give up the chance for huge, outlier gains.', icon: ' mediocrity' },
+                    { title: 'Full Market Risk', description: 'If the entire market crashes, your index fund will fall right along with it. There is no active manager to make defensive moves.', icon: '📉' },
+                    { title: 'Lack of Flexibility', description: 'The fund must hold all stocks in the index, even those that seem overvalued. You can\'t customize the holdings.', icon: '⚙️' },
+                    { title: 'Concentration Risk', description: 'In market-weighted indexes like the S&P 500, a few giant companies (like Apple or Microsoft) have an outsized impact on performance.', icon: '🎯' },
+                ]
+            },
+            start: {
+                title: 'Your Practical Guide: How to Start',
+                intro_text: 'Turning knowledge into action is simpler than you think. Investing in your first index fund can be broken down into five clear, manageable steps. Follow this guide to get started.',
+                steps: [
+                    { num: 1, title: 'Open an Account', description: 'You need an investment account. This can be a retirement account like a 401(k) or an IRA, or a standard taxable Brokerage Account.' },
+                    { num: 2, title: 'Fund Your Account', description: 'Link a bank account and transfer money. Setting up automatic, recurring transfers is a great way to build discipline.' },
+                    { num: 3, title: 'Choose Your Fund', description: 'For beginners, a broad S&P 500 or Total Stock Market index fund is a great start. Compare options from different firms and pick one with the lowest expense ratio (fee).' },
+                    { num: 4, title: 'Place Your Buy Order', description: 'On your broker\'s website or app, enter the fund\'s ticker symbol (e.g., VOO, FXAIX) and the amount you want to invest.' },
+                    { num: 5, title: 'Stay the Course', description: 'You\'re an investor! The key now is patience. Ignore short-term noise, continue investing regularly, and let your money grow over the long term.' }
+                ]
+            }
+        };
+
+        let costChart = null;
+
+        function calculateCompoundGrowth(initial, years, returnRate, fee) {
+            const data = [];
+            let currentValue = initial;
+            for (let i = 0; i <= years; i++) {
+                data.push(currentValue);
+                currentValue = currentValue * (1 + returnRate - fee);
+            }
+            return data;
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
+        }
+
+        function createCostChart() {
+            const chartData = appData.intro.cost.chartData;
+            const years = Array.from({ length: chartData.years + 1 }, (_, i) => `Year ${i}`);
+            const activeData = calculateCompoundGrowth(chartData.initial, chartData.years, chartData.returnRate, chartData.activeFee);
+            const passiveData = calculateCompoundGrowth(chartData.initial, chartData.years, chartData.returnRate, chartData.passiveFee);
+
+            const ctx = document.getElementById('cost-comparison-chart').getContext('2d');
+            
+            if(costChart) {
+                costChart.destroy();
+            }
+
+            costChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Index Fund (0.2% Fee)',
+                        data: passiveData,
+                        borderColor: '#81B29A',
+                        backgroundColor: 'rgba(129, 178, 154, 0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }, {
+                        label: 'Active Fund (1.2% Fee)',
+                        data: activeData,
+                        borderColor: '#E07A5F',
+                        backgroundColor: 'rgba(224, 122, 95, 0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                      duration: 2000,
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 0,
+                                minRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 10
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += formatCurrency(context.parsed.y);
+                                    }
+                                    const diff = passiveData[context.dataIndex] - activeData[context.dataIndex];
+                                    if(context.dataIndex > 0) {
+                                       return [label, `Difference: ${formatCurrency(diff)}`];
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                }
+            });
+        }
+
+        function renderIntroSection() {
+            const data = appData.intro;
+            const passiveFinal = data.cost.chartData.initial * Math.pow((1 + data.cost.chartData.returnRate - data.cost.chartData.passiveFee), data.cost.chartData.years);
+            const activeFinal = data.cost.chartData.initial * Math.pow((1 + data.cost.chartData.returnRate - data.cost.chartData.activeFee), data.cost.chartData.years);
+            const difference = passiveFinal - activeFinal;
+
+            const html = `
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#3D405B]">${data.title}</h2>
+                    <p class="max-w-3xl mx-auto text-lg text-gray-600">${data.intro_text}</p>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12">
+                    <h3 class="text-2xl font-bold mb-2 text-center text-[#3D405B]">${data.cost.title}</h3>
+                    <p class="text-center text-gray-600 max-w-4xl mx-auto mb-4">${data.cost.description}</p>
+                    <p class="text-center text-3xl font-bold text-[#81B29A] mb-6">Ending Difference: ${formatCurrency(difference)}</p>
+                    <div class="chart-container">
+                        <canvas id="cost-comparison-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                    <h3 class="text-2xl font-bold mb-4 text-center text-[#3D405B]">${data.diversification.title}</h3>
+                    <p class="text-center text-gray-600 max-w-4xl mx-auto mb-8">${data.diversification.description}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="text-center p-4 border-2 border-red-400 border-dashed rounded-lg">
+                            <h4 class="font-bold text-lg mb-2 text-red-600">Single Stock</h4>
+                            <div class="w-24 h-24 bg-red-200 mx-auto rounded-lg flex items-center justify-center font-bold text-red-800">RISKY</div>
+                             <p class="mt-2 text-sm text-gray-500">All eggs in one basket.</p>
+                        </div>
+                        <div class="text-center p-4 border-2 border-green-400 border-dashed rounded-lg">
+                            <h4 class="font-bold text-lg mb-2 text-green-600">S&P 500 Index Fund</h4>
+                            <div class="grid grid-cols-10 gap-1 w-48 h-48 mx-auto p-2">
+                                ${Array(100).fill(0).map(() => `<div class="w-full h-full bg-green-200 rounded-sm"></div>`).join('')}
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">Spread across ~500 companies.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('section-intro').innerHTML = html;
+        }
+
+        function renderHowSection() {
+            const data = appData.how;
+            const html = `
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#3D405B]">${data.title}</h2>
+                    <p class="max-w-3xl mx-auto text-lg text-gray-600">${data.intro_text}</p>
+                </div>
+                <div class="flex justify-center mb-8 border-b-2 border-gray-200">
+                    ${data.tabs.map((tab, index) => `
+                        <button class="interactive-tab text-sm md:text-base font-semibold py-3 px-4 md:px-6 -mb-0.5 border-b-4 ${index === 0 ? 'active border-[#E07A5F]' : 'border-transparent hover:border-gray-300'}" data-tab="${tab.id}">${tab.name}</button>
+                    `).join('')}
+                </div>
+                <div id="how-tab-content"></div>
+            `;
+            document.getElementById('section-how').innerHTML = html;
+            renderHowTabContent(data.tabs[0].id);
+        }
+        
+        function renderHowTabContent(tabId) {
+            const data = appData.how.tabs.find(t => t.id === tabId);
+            let contentHtml = '';
+            
+            if (tabId === 'basics') {
+                contentHtml = `
+                <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                    <h3 class="text-2xl font-bold mb-8 text-center text-[#3D405B]">${data.title}</h3>
+                    <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                        ${data.steps.map((step, index) => `
+                            <div class="flex items-center flex-col md:flex-row text-center md:text-left">
+                                <div class="flex-shrink-0 bg-[#3D405B] text-white w-16 h-16 rounded-full flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="font-bold text-lg">${step.name}</div>
+                                    </div>
+                                </div>
+                                <div class="w-full md:w-auto p-4 max-w-xs">
+                                    <p class="text-gray-600">${step.detail}</p>
+                                </div>
+                            </div>
+                            ${index < data.steps.length - 1 ? `<div class="text-4xl text-[#E07A5F] font-light transform md:rotate-0 rotate-90">&rarr;</div>` : ''}
+                        `).join('')}
+                    </div>
+                </div>
+                `;
+            } else if (tabId === 'indexes') {
+                 contentHtml = `
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                        <h3 class="text-2xl font-bold mb-8 text-center text-[#3D405B]">${data.title}</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                           ${data.items.map(item => `
+                                <div class="border border-gray-200 rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                                    <h4 class="font-bold text-xl mb-3 text-[#3D405B]">${item.name}</h4>
+                                    <p class="mb-2"><strong class="font-semibold text-gray-700">Companies:</strong> ${item.companies}</p>
+                                    <p class="mb-2"><strong class="font-semibold text-gray-700">Represents:</strong> ${item.represents}</p>
+                                    <p class="mb-4"><strong class="font-semibold text-gray-700">Weighting:</strong> ${item.weighting}</p>
+                                    <div class="bg-[#F4F1DE] p-3 rounded-md">
+                                        <p class="text-sm font-semibold text-[#E07A5F]">Key Takeaway:</p>
+                                        <p class="text-sm text-gray-800">${item.takeaway}</p>
+                                    </div>
+                                </div>
+                           `).join('')}
+                        </div>
+                    </div>
+                 `;
+            } else if (tabId === 'types') {
+                contentHtml = `
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                        <h3 class="text-2xl font-bold mb-8 text-center text-[#3D405B]">${data.title}</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                            ${data.items.map(item => `
+                                <div class="text-center p-6 border-2 border-dashed rounded-lg ${item.name.includes('Mutual') ? 'border-[#81B29A]' : 'border-[#E07A5F]'}">
+                                    <div class="text-5xl mb-4">${item.icon}</div>
+                                    <h4 class="font-bold text-xl mb-4 text-[#3D405B]">${item.name}</h4>
+                                    <ul class="space-y-3 text-left">
+                                        <li><strong class="font-semibold">Buy/Sell:</strong> ${item.buySell}</li>
+                                        <li><strong class="font-semibold">Pricing:</strong> ${item.pricing}</li>
+                                        <li class="font-semibold text-lg pt-2 text-center text-white p-3 rounded-md ${item.name.includes('Mutual') ? 'bg-[#81B29A]' : 'bg-[#E07A5F]'}"><strong >Best For:</strong> ${item.bestFor}</li>
+                                    </ul>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('how-tab-content').innerHTML = contentHtml;
+        }
+
+        function renderRisksSection() {
+            const data = appData.risks;
+            const html = `
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#3D405B]">${data.title}</h2>
+                    <p class="max-w-3xl mx-auto text-lg text-gray-600">${data.intro_text}</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    ${data.items.map(item => `
+                        <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
+                            <div class="text-4xl mb-3">${item.icon}</div>
+                            <h4 class="font-bold text-lg mb-2 text-[#E07A5F]">${item.title}</h4>
+                            <p class="text-gray-600 text-sm">${item.description}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('section-risks').innerHTML = html;
+        }
+
+        function renderStartSection() {
+            const data = appData.start;
+            const html = `
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#3D405B]">${data.title}</h2>
+                    <p class="max-w-3xl mx-auto text-lg text-gray-600">${data.intro_text}</p>
+                </div>
+                <div class="max-w-3xl mx-auto">
+                    <div class="relative">
+                        <!-- The line -->
+                        <div class="hidden md:block absolute top-0 left-10 h-full w-0.5 bg-[#81B29A]/50"></div>
+                        
+                        <div class="space-y-12">
+                            ${data.steps.map(step => `
+                                <div class="relative pl-0 md:pl-20">
+                                    <div class="hidden md:flex absolute top-0 left-0 items-center justify-center w-20 h-20">
+                                        <div class="w-10 h-10 bg-[#81B29A] rounded-full text-white font-bold text-xl flex items-center justify-center">${step.num}</div>
+                                    </div>
+                                    <div class="bg-white rounded-xl shadow-lg p-6">
+                                        <h4 class="flex items-center font-bold text-xl mb-2 text-[#3D405B]">
+                                            <span class="md:hidden flex items-center justify-center w-8 h-8 mr-3 bg-[#81B29A] rounded-full text-white text-base">${step.num}</span>
+                                            ${step.title}
+                                        </h4>
+                                        <p class="text-gray-600">${step.description}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('section-start').innerHTML = html;
+        }
+
+        function setActiveSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.toggle('active', button.dataset.section === sectionId);
+            });
+            document.getElementById('mobile-nav').value = sectionId;
+
+            if (sectionId === 'section-intro' && !costChart) {
+                setTimeout(createCostChart, 100);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderIntroSection();
+            renderHowSection();
+            renderRisksSection();
+            renderStartSection();
+
+            setActiveSection('section-intro');
+
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    setActiveSection(e.target.dataset.section);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+            
+            document.getElementById('mobile-nav').addEventListener('change', (e) => {
+                setActiveSection(e.target.value);
+                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            document.getElementById('section-how').addEventListener('click', e => {
+                if(e.target.classList.contains('interactive-tab')) {
+                    const tabId = e.target.dataset.tab;
+                    document.querySelectorAll('#section-how .interactive-tab').forEach(tab => {
+                         tab.classList.toggle('active', tab.dataset.tab === tabId);
+                         tab.classList.toggle('border-[#E07A5F]', tab.dataset.tab === tabId);
+                         tab.classList.toggle('border-transparent', tab.dataset.tab !== tabId);
+                    });
+                    renderHowTabContent(tabId);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
